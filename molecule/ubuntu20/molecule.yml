@@ -13,7 +13,6 @@ platforms:
     privileged: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: true
 provisioner:
   name: ansible
 verifier:
