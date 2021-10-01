@@ -110,7 +110,7 @@
     - 'net.ipv6.conf.all.forwarding'
 
 - name: connect subnet router to tailscale
-  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-routes={{ tailscale_routes }}"
+  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-routes={{ tailscale_routes }} {{ tailscale_args }}"
   no_log: true
   when:
     - status.rc|int != 0
