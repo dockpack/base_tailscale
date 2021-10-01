@@ -29,8 +29,7 @@ galaxy_info:
         - 8
     - name: Windows
       versions:
-        - 7
-        - 10
+        - all
     - name: macOS
       versions:
         - all
