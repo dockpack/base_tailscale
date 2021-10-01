@@ -79,6 +79,7 @@
     quiet: true
     success_msg: 'TAILSCALE_AUTHKEY is valid'
   register: authorization
+  ignore_errors: true
 
 - name: check if tailscale is up
   command: tailscale status
@@ -92,6 +93,7 @@
   when:
     - status.rc|int != 0
     - not tailscale_router
+    - not authorization.failed
   register: tailscale_node
   changed_when: tailscale_node.rc|int == 0
 
@@ -113,6 +115,7 @@
   when:
     - status.rc|int != 0
     - tailscale_router|bool
+    - not authorization.failed
   register: tailscale_router
   changed_when: tailscale_router.rc|int == 0
 
@@ -129,8 +132,8 @@
 
 - name: check status
   command: tailscale status
-  no_log: true
   changed_when: false
+  failed_when: status.rc|int > 1
   register: status_check
 
 - name: display tailscale_ip
