@@ -1,0 +1,31 @@
+---
+
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: windows2016
+    box: jborean93/WindowsServer2022
+    memory: 4069
+    cpus: 2
+    groups:
+      - windows
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      windows2016:
+        ansible_user: vagrant
+        ansible_password: vagrant
+        ansible_port: 55986
+        ansible_host: 127.0.0.1
+        ansible_connection: winrm
+        ansible_winrm_scheme: https
+        ansible_winrm_server_cert_validation: ignore
+verifier:
+  name: ansible

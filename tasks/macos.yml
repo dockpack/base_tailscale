@@ -1,0 +1,13 @@
+---
+
+# https://github.com/mas-cli/mas
+- name: install mas
+  homebrew:
+    name: mas
+    state: present
+
+# https://tailscale.com/kb/1065/macos-variants/
+- name: install tailscale
+  command: /usr/local/bin/mas install 1475387142
+  args:
+    creates: /Applications/Tailscale.app/Contents/MacOS/Tailscale

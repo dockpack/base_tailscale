@@ -1,0 +1,72 @@
+---
+# yamllint disable rule:line-length
+
+# Debian Linux
+- block:
+    - name: set platform in distro
+      set_fact:
+        distro: "{{ ansible_distribution | lower }}"
+        major: "{{ ansible_distribution_release }}"
+
+    - name: install tailscale gpg key
+      apt_key:
+        state: present
+        url: 'https://pkgs.tailscale.com/stable/{{ distro }}/{{ major }}.gpg'
+
+    - name: install tailscale Debian repo
+      apt_repository:
+        repo: 'deb https://pkgs.tailscale.com/stable/{{ distro }} {{ major }} main'
+        filename: tailscale.list
+  when:
+    - ansible_os_family == 'Debian'
+
+# RedHat Linux
+
+# https://tailscale.com/kb/1048/install-centos-7
+# https://tailscale.com/kb/1051/install-centos-8
+- name: set platform in distro
+  when: ansible_distribution == 'CentOS'
+  set_fact:
+    distro: 'centos'
+
+# https://tailscale.com/kb/1050/install-fedora
+- name: set platform in distro
+  when: ansible_distribution == 'Fedora'
+  set_fact:
+    distro: 'fedora'
+    major: ''
+
+# https://tailscale.com/kb/1046/install-rhel-8
+- name: set platform infix
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'Rocky'
+  set_fact:
+    distro: 'rhel'
+
+- name: set major
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution != 'Fedora'
+  set_fact:
+    major: "/{{ ansible_distribution_major_version }}"
+
+- name: install tailscale Yum repo
+  get_url:
+    url: "https://pkgs.tailscale.com/stable/{{ distro }}{{ major }}/tailscale.repo"
+    dest: /etc/yum.repos.d/tailscale.repo
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_os_family == 'RedHat'
+
+# Linux
+- name: install tailscale package
+  package:
+    name: tailscale
+    state: present
+  when: ansible_os_family in ['RedHat', 'Debian']
+
+- name: enable tailscaled
+  systemd:
+    name: tailscaled
+    enabled: true
+    state: started

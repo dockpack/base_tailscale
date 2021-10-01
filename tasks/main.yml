@@ -1,0 +1,24 @@
+---
+# tasks file for base_tailscale
+
+# https://tailscale.com/kb/1031/install-linux/
+- name: install tailscale on Linux
+  include_tasks: linux.yml
+  when:
+    - ansible_os_family != 'Windows'
+    - ansible_os_family != 'Darwin'
+  tags:
+    - linux
+
+- name: install tailscale on MacOS
+  include_tasks: macos.yml
+  when:
+    - ansible_os_family == 'Darwin'
+  tags:
+    - mac
+
+- name: install tailscale on Windows
+  include_tasks: windows.yml
+  when: ansible_os_family == 'Windows'
+  tags:
+    - windows

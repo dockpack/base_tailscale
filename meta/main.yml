@@ -1,0 +1,41 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: base_tailscale
+  namespace: dockpack
+  author: bbaassssiiee
+  description: |
+    Tailscale is a zero-config VPN. Installs on any device in minutes,
+    manages firewall rules for you, and works from anywhere.
+  license: MIT
+  min_ansible_version: 2.9.20
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+        - sid
+        - stretch
+    - name: Ubuntu
+      versions:
+        - focal
+        - bionic
+        - eoan
+        - xenial
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Windows
+      versions:
+        - 7
+        - 10
+    - name: macOS
+      versions:
+        - all
+  galaxy_tags:
+    - system
+    - security
+    - networking
+...
