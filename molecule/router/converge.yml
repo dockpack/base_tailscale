@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    tailscale_router: true
+  roles:
+    - role: base_tailscale

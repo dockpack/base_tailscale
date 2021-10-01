@@ -70,3 +70,68 @@
     name: tailscaled
     enabled: true
     state: started
+
+- name: validate tailscale_authkey
+  assert:
+    that:
+      - tailscale_authkey is defined
+      - tailscale_authkey|length == 30
+    quiet: true
+    success_msg: 'TAILSCALE_AUTHKEY is valid'
+  register: authorization
+
+- name: check if tailscale is up
+  command: tailscale status
+  register: status
+  failed_when: status.rc|int > 1
+  changed_when: false
+
+- name: connect machine to tailscale
+  command: "tailscale up -authkey {{ tailscale_authkey }}"
+  no_log: true
+  when:
+    - status.rc|int != 0
+    - not tailscale_router
+  register: tailscale_node
+  changed_when: tailscale_node.rc|int == 0
+
+- name: setup
+  when: tailscale_router|bool
+  sysctl:
+    name: "{{ item }}"
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  loop:
+    - 'net.ipv4.ip_forward'
+    - 'net.ipv6.conf.all.forwarding'
+
+- name: connect subnet router to tailscale
+  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-routes={{ tailscale_routes }}"
+  no_log: true
+  when:
+    - status.rc|int != 0
+    - tailscale_router|bool
+  register: tailscale_router
+  changed_when: tailscale_router.rc|int == 0
+
+- name: check ip address
+  command: tailscale ip
+  register: ip_check
+  failed_when: false
+  changed_when: false
+
+- name: set tailscale_ip fact
+  when: ip_check.rc|int == 0
+  set_fact:
+    tailscale_ip: "{{ ip_check.stdout_lines[0] }}"
+
+- name: check status
+  command: tailscale status
+  no_log: true
+  changed_when: false
+  register: status_check
+
+- name: display tailscale_ip
+  debug: var=status_check.stdout_lines

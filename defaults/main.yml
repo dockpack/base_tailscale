@@ -1,0 +1,11 @@
+---
+# To connect Linux machines you need to setup a key
+# https://login.tailscale.com/admin/settings/authkeys
+tailscale_authkey: "{{ lookup('env','TAILSCALE_AUTHKEY') }}"
+
+# subnet router only enable when you know what we'll be into!!
+# https://tailscale.com/kb/1019/subnets/
+tailscale_router: false
+# authorize these routes in the admin console
+# https://login.tailscale.com/admin/machines
+tailscale_routes: '10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
