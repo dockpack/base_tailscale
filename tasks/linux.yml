@@ -1,19 +1,20 @@
 ---
+# Standards: 0.2
 # yamllint disable rule:line-length
 
 # Debian Linux
 - block:
-    - name: set platform in distro
+    - name: Set platform facts
       set_fact:
         distro: "{{ ansible_distribution | lower }}"
         major: "{{ ansible_distribution_release }}"
 
-    - name: install tailscale gpg key
+    - name: Install tailscale gpg key
       apt_key:
         state: present
         url: 'https://pkgs.tailscale.com/stable/{{ distro }}/{{ major }}.gpg'
 
-    - name: install tailscale Debian repo
+    - name: Install tailscale Debian repo
       apt_repository:
         repo: 'deb https://pkgs.tailscale.com/stable/{{ distro }} {{ major }} main'
         filename: tailscale.list
@@ -24,32 +25,32 @@
 
 # https://tailscale.com/kb/1048/install-centos-7
 # https://tailscale.com/kb/1051/install-centos-8
-- name: set platform in distro
+- name: Set distro toCentOS
   when: ansible_distribution == 'CentOS'
   set_fact:
     distro: 'centos'
 
 # https://tailscale.com/kb/1050/install-fedora
-- name: set platform in distro
+- name: Set distro to Fedora
   when: ansible_distribution == 'Fedora'
   set_fact:
     distro: 'fedora'
     major: ''
 
 # https://tailscale.com/kb/1046/install-rhel-8
-- name: set platform infix
+- name: Set platform infix
   when: ansible_distribution == 'RedHat' or ansible_distribution == 'Rocky'
   set_fact:
     distro: 'rhel'
 
-- name: set major
+- name: Set major
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution != 'Fedora'
   set_fact:
     major: "/{{ ansible_distribution_major_version }}"
 
-- name: install tailscale Yum repo
+- name: Install tailscale Yum repo
   get_url:
     url: "https://pkgs.tailscale.com/stable/{{ distro }}{{ major }}/tailscale.repo"
     dest: /etc/yum.repos.d/tailscale.repo
@@ -59,19 +60,19 @@
   when: ansible_os_family == 'RedHat'
 
 # Linux
-- name: install tailscale package
+- name: Install tailscale package
   package:
     name: tailscale
     state: present
   when: ansible_os_family in ['RedHat', 'Debian']
 
-- name: enable tailscaled
+- name: Enable tailscaled
   systemd:
     name: tailscaled
     enabled: true
     state: started
 
-- name: validate tailscale_authkey
+- name: Validate tailscale_authkey
   assert:
     that:
       - tailscale_authkey is defined
@@ -81,13 +82,13 @@
   register: authorization
   ignore_errors: true
 
-- name: check if tailscale is up
+- name: Check if tailscale is up
   command: tailscale status
   register: status
   failed_when: status.rc|int > 1
   changed_when: false
 
-- name: connect machine to tailscale
+- name: Connect machine to tailscale
   command: "tailscale up -authkey {{ tailscale_authkey }}"
   no_log: true
   when:
@@ -97,19 +98,19 @@
   register: tailscale_node
   changed_when: tailscale_node.rc|int == 0
 
-- name: setup
+- name: Setup
   when: tailscale_router|bool
   sysctl:
     name: "{{ item }}"
     value: '1'
-    sysctl_set: yes
+    sysctl_set: true
     state: present
-    reload: yes
+    reload: true
   loop:
     - 'net.ipv4.ip_forward'
     - 'net.ipv6.conf.all.forwarding'
 
-- name: connect subnet router to tailscale
+- name: Connect subnet router to tailscale
   command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-routes={{ tailscale_routes }} {{ tailscale_args }}"
   no_log: true
   when:
@@ -119,22 +120,24 @@
   register: tailscale_router
   changed_when: tailscale_router.rc|int == 0
 
-- name: check ip address
+- name: Check ip address
   command: tailscale ip
   register: ip_check
   failed_when: false
   changed_when: false
 
-- name: set tailscale_ip fact
+- name: Set tailscale_ip fact
   when: ip_check.rc|int == 0
   set_fact:
     tailscale_ip: "{{ ip_check.stdout_lines[0] }}"
 
-- name: check status
+- name: Check status
   command: tailscale status
   changed_when: false
   failed_when: status.rc|int > 1
   register: status_check
 
-- name: display tailscale_ip
-  debug: var=status_check.stdout_lines
+- name: Display tailscale_ip
+  debug:
+     msg: "{{ status_check.stdout_lines }}"
+...
