@@ -1,5 +1,6 @@
 ---
-
-- name: download installer
+# Standards: 0.2
+- name: Download installer
   win_get_url:
     url: 'https://pkgs.tailscale.com/stable/tailscale-ipn-setup-1.14.4.exe'
+...

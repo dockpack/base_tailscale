@@ -1,6 +1,6 @@
 ---
 # tasks file for base_tailscale
-
+# Standards: 0.2
 # https://tailscale.com/kb/1031/install-linux/
 - name: install tailscale on Linux
   include_tasks: linux.yml
@@ -22,3 +22,4 @@
   when: ansible_os_family == 'Windows'
   tags:
     - windows
+...

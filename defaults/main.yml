@@ -1,4 +1,5 @@
 ---
+# Standards: 0.2
 # To connect Linux machines you need to setup a key
 # https://login.tailscale.com/admin/settings/authkeys
 tailscale_authkey: "{{ lookup('env','TAILSCALE_AUTHKEY') }}"
@@ -12,3 +13,4 @@ tailscale_router: false
 tailscale_routes: '10.1.0.0/24,168.63.129.16/32'
 # authorize these routes in the admin console
 # https://login.tailscale.com/admin/machines
+...
