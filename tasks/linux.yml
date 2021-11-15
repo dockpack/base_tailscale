@@ -76,7 +76,7 @@
   assert:
     that:
       - tailscale_authkey is defined
-      - tailscale_authkey|length == 30
+      - tailscale_authkey|length >= 30
     quiet: true
     success_msg: 'TAILSCALE_AUTHKEY is valid'
   register: authorization
