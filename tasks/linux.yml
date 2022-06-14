@@ -132,7 +132,7 @@
     tailscale_ip: "{{ ip_check.stdout_lines[0] }}"
 
 - name: Check status
-  command: tailscale status
+  command: "tailscale status | grep {{inventory_hostname}}"
   changed_when: false
   failed_when: status.rc|int > 1
   register: status_check
@@ -140,5 +140,5 @@
 - name: Display tailscale_ip
   debug:
     msg: "{{ status_check.stdout_lines }}"
-    verbosity: 2
+    verbosity: 1
 ...
