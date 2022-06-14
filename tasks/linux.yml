@@ -139,5 +139,6 @@
 
 - name: Display tailscale_ip
   debug:
-     msg: "{{ status_check.stdout_lines }}"
+    msg: "{{ status_check.stdout_lines }}"
+    verbosity: 2
 ...
