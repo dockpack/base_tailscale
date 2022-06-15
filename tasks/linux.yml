@@ -88,8 +88,47 @@
   failed_when: status.rc|int > 1
   changed_when: false
 
+- set_fact:
+    standard_tag_set:
+      - "tag:{{ tag_environment }}"
+      - "tag:{{ tag_type }}"
+      - "tag:{{ tag_chain }}"
+      - "tag:{{ tag_network }}"
+      - "tag:{{ tag_region }}"
+      - "tag:{{ tag_cloud }}"
+- debug:
+    var: standard_tag_set
+    verbosity: 1
+- debug:
+    var: tailscale_tags
+    verbosity: 1
+
+- set_fact:
+    tailscale_tags_tag_set: "{{ tailscale_tags | list | map('regex_replace','^(tag:)?(.+)$','tag:\\2') }}"
+- debug:
+    var: tailscale_tags_tag_set
+    verbosity: 2
+
+- set_fact:
+    union_tag_set: "{{ standard_tag_set | union(tailscale_tags) }}"
+- debug:
+    var: union_tag_set
+    verbosity: 2
+
+- set_fact:
+    tailscale_tag_map: "{{ union_tag_set | zip(union_tag_set|map('replace', ':', '_')) }}"
+- debug:
+    var: tailscale_tag_map
+    verbosity: 2
+
+- set_fact:
+    tailscale_tag_set: "{{ tailscale_tag_map.keys() | list }}"
+- debug:
+    var: tailscale_tag_set
+    verbosity: 1
+
 - name: Connect machine to tailscale
-  command: "tailscale up -authkey {{ tailscale_authkey }}"
+  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-tags {{ tailscale_tag_set }}"
   no_log: true
   when:
     - status.rc|int != 0
@@ -111,7 +150,7 @@
     - 'net.ipv6.conf.all.forwarding'
 
 - name: Connect subnet router to tailscale
-  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-routes={{ tailscale_routes }} {{ tailscale_args }}"
+  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-routes={{ tailscale_routes }} --advertise-tags {{ tailscale_tag_set }} {{ tailscale_args }}"
   no_log: true
   when:
     - status.rc|int != 0
