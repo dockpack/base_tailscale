@@ -110,7 +110,7 @@
     verbosity: 2
 
 - set_fact:
-    union_tag_set: "{{ standard_tag_set | union(tailscale_tags) }}"
+    union_tag_set: "{{ standard_tag_set | union(tailscale_tags_tag_set) }}"
 - debug:
     var: union_tag_set
     verbosity: 2
