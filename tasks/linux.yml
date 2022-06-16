@@ -122,13 +122,13 @@
     verbosity: 2
 
 - set_fact:
-    tailscale_tag_set: "{{ tailscale_tag_map.keys() | list | join(',') }}"
+    tailscale_tag_set: "{{ tailscale_tag_map.keys() | list }}"
 - debug:
     var: tailscale_tag_set
     verbosity: 1
 
 - name: Connect machine to tailscale
-  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-tags '{{ tailscale_tag_set }}'"
+  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-tags '{{ tailscale_tag_set  | join(',') }}'"
   when:
     - status.rc|int != 0
     - not tailscale_router|bool
