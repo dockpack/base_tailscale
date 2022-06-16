@@ -116,7 +116,7 @@
     verbosity: 2
 
 - set_fact:
-    tailscale_tag_map: "{{ union_tag_set | zip(union_tag_set|map('replace', ':', '_')) }}"
+    tailscale_tag_map: "{{ dict(union_tag_set | zip(union_tag_set|map('replace', ':', '_'))) }}"
 - debug:
     var: tailscale_tag_map
     verbosity: 2
