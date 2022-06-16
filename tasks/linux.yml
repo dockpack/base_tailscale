@@ -129,13 +129,13 @@
 
 - name: Connect machine to tailscale
   command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-tags {{ tailscale_tag_set }}"
-  no_log: true
   when:
     - status.rc|int != 0
-    - not tailscale_router
+    - not tailscale_router|bool
     - not authorization.failed
   register: tailscale_node
   changed_when: tailscale_node.rc|int == 0
+  #no_log: true
 
 - name: Setup
   when: tailscale_router|bool
@@ -151,13 +151,13 @@
 
 - name: Connect subnet router to tailscale
   command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-routes={{ tailscale_routes }} --advertise-tags {{ tailscale_tag_set }} {{ tailscale_args }}"
-  no_log: true
+#  no_log: true
   when:
     - status.rc|int != 0
     - tailscale_router|bool
     - not authorization.failed
-  register: tailscale_router
-  changed_when: tailscale_router.rc|int == 0
+  register: router_status
+  changed_when: router_status.rc|int == 0
 
 - name: Check ip address
   command: tailscale ip
