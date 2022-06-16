@@ -94,8 +94,6 @@
       - "tag:{{ tag_type }}"
       - "tag:{{ tag_chain }}"
       - "tag:{{ tag_network }}"
-      - "tag:{{ tag_region }}"
-      - "tag:{{ tag_cloud }}"
 - debug:
     var: standard_tag_set
     verbosity: 2
