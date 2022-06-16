@@ -98,10 +98,10 @@
       - "tag:{{ tag_cloud }}"
 - debug:
     var: standard_tag_set
-    verbosity: 1
+    verbosity: 2
 - debug:
     var: tailscale_tags
-    verbosity: 1
+    verbosity: 2
 
 - set_fact:
     tailscale_tags_tag_set: "{{ tailscale_tags | list | map('regex_replace','^(tag:)?(.+)$','tag:\\2') }}"
@@ -122,13 +122,13 @@
     verbosity: 2
 
 - set_fact:
-    tailscale_tag_set: "{{ tailscale_tag_map.keys() | list }}"
+    tailscale_tag_set: "{{ tailscale_tag_map.keys() | list | join(',') }}"
 - debug:
     var: tailscale_tag_set
-    verbosity: 1
+    verbosity: 2
 
 - name: Connect machine to tailscale
-  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-tags '{{ tailscale_tag_set  | join(',') }}'"
+  command: "tailscale up -authkey {{ tailscale_authkey }} --advertise-tags '{{ tailscale_tag_set }}'"
   when:
     - status.rc|int != 0
     - not tailscale_router|bool
