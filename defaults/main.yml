@@ -3,7 +3,7 @@
 # To connect Linux machines you need to setup a key
 # https://login.tailscale.com/admin/settings/authkeys
 tailscale_authkey: "{{ lookup('env','TAILSCALE_AUTHKEY') }}"
-tailscale_args: '--shields-up'
+tailscale_args: '--accept-routes=true'
 
 # subnet router only enable when you know what we'll be into!!
 # https://tailscale.com/kb/1019/subnets/
