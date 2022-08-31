@@ -89,11 +89,31 @@
   changed_when: false
 
 - set_fact:
-    standard_tag_set:
-      - "tag:{{ tag_environment }}"
-      - "tag:{{ tag_type }}"
-      - "tag:{{ tag_chain }}"
-      - "tag:{{ tag_network }}"
+    standard_tag_set: []
+
+- set_fact:
+    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_environment }}'] }}"
+  when: tag_environment is defined
+
+- set_fact:
+    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_type }}'] }}"
+  when: tag_type is defined
+  
+- set_fact:
+    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_chain }}'] }}"
+  when: tag_chain is defined
+  
+- set_fact:
+    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_network }}'] }}"
+  when: tag_network is defined
+  
+- set_fact:
+    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_region }}'] }}"
+  when: tag_region is defined
+  
+- set_fact:
+    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_cloud }}'] }}"
+  when: tag_cloud is defined
 - debug:
     var: standard_tag_set
     verbosity: 2
