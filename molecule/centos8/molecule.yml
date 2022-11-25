@@ -8,7 +8,7 @@ lint: |
   ansible-lint
 platforms:
   - name: tailscale_centos8
-    image: centos:8
+    image: quay.io/centos/centos:stream8
     command: /sbin/init
     privileged: true
     tmpfs:

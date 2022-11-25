@@ -3,7 +3,8 @@
 # yamllint disable rule:line-length
 
 # Debian Linux
-- block:
+- name: Debian install
+  block:
     - name: Set platform facts
       set_fact:
         distro: "{{ ansible_distribution | lower }}"
@@ -25,7 +26,7 @@
 
 # https://tailscale.com/kb/1048/install-centos-7
 # https://tailscale.com/kb/1051/install-centos-8
-- name: Set distro toCentOS
+- name: Set distro to CentOS
   when: ansible_distribution == 'CentOS'
   set_fact:
     distro: 'centos'
@@ -137,7 +138,8 @@
   failed_when: status.rc|int > 1
   register: status_check
 
-- name: Display tailscale_ip
+- name: Display Tailscale IP
+  when: tailscale_ip is defined
   debug:
-     msg: "{{ status_check.stdout_lines }}"
+    msg: "{{ tailscale_ip }}"
 ...

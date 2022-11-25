@@ -3,5 +3,5 @@
 Ansible role to install Tailscale on Linux platforms.
 
 
-Copyright 2021 Bas Meijer
+Copyright 2021-2022 Bas Meijer
 License: MIT

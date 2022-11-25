@@ -8,7 +8,7 @@ lint: |
   ansible-lint
 platforms:
   - name: tailscale_centos7
-    image: centos:7
+    image: centos:7.9.2009
     command: /sbin/init
     privileged: true
     tmpfs:
