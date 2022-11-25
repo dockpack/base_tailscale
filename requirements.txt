@@ -1,15 +1,15 @@
-# these python extensions are for ansible testing
+# these python extensions are for testing
 tox
-sh==1.12.14
-molecule
-molecule-docker
-molecule-vagrant
-yamllint
-ansible-lint
-docker==4.2.2
+pipx
+attrs>=19.2.0
+rich==12.5.1
+ansible==6.2.0
+ansible-lint==6.4.0
+molecule==4.0.1
+molecule-docker==2.0.0
+molecule-vagrant-1.0.0
+yamllint==1.28.0
+docker>=4.3.1
+ssh-audit
 anyconfig>=0.10.0 # not directly required, pinned by Snyk to avoid a vulnerability
-beautifulsoup4
-packaging
-pywinrm==0.2.2
-pypsrp
-requests
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability

@@ -2,6 +2,11 @@
 - name: Converge
   hosts: all
   vars:
-    tailscale_router: true
-  roles:
-    - role: base_tailscale
+    role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+
+  tasks:
+    - name: "Include {{ role_name }}"
+      ansible.builtin.include_role:
+        name: "{{ role_name }}"
+
+...

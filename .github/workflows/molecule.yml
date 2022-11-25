@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: "${{ github.repository }}"
       - name: molecule
-        uses: robertdebock/molecule-action@2.6.8
+        uses: robertdebock/molecule-action@2.7.2
         with:
           command: lint
   test:
@@ -27,11 +27,11 @@ jobs:
       fail-fast: false
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: "${{ github.repository }}"
       - name: molecule
-        uses: robertdebock/molecule-action@2.6.8
+        uses: robertdebock/molecule-action@2.7.2
         with:
           image: ${{ matrix.config.image }}
           tag: ${{ matrix.config.tag }}

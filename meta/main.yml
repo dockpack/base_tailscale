@@ -10,30 +10,30 @@ galaxy_info:
     Tailscale is a zero-config VPN. Installs on any device in minutes,
     manages firewall rules for you, and works from anywhere.
   license: MIT
-  min_ansible_version: 2.9.20
+  min_ansible_version: '2.9.27'
   platforms:
     - name: Debian
       versions:
-        - buster
-        - bullseye
-        - sid
-        - stretch
+        - 'buster'
+        - 'bullseye'
+        - 'sid'
+        - 'stretch'
     - name: Ubuntu
       versions:
-        - focal
-        - bionic
-        - eoan
-        - xenial
+        - 'focal'
+        - 'bionic'
+        - 'eoan'
+        - 'xenial'
     - name: EL
       versions:
-        - 7
-        - 8
+        - '7'
+        - '8'
     - name: Windows
       versions:
-        - all
+        - 'all'
     - name: macOS
       versions:
-        - all
+        - 'all'
   galaxy_tags:
     - system
     - security
