@@ -89,38 +89,18 @@
   changed_when: false
 
 - set_fact:
-    standard_tag_set: []
+    standard_tag_set: ['tag:quicknode']
 
 - set_fact:
-    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_environment }}'] }}"
-  when: tag_environment is defined
-
-- set_fact:
-    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_type }}'] }}"
-  when: tag_type is defined
+    standard_tag_set: "{{ standard_tag_set + ['tag:edge'] }}"
+  when: ('edge' in ansible_hostname)
   
-- set_fact:
-    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_chain }}'] }}"
-  when: tag_chain is defined
-  
-- set_fact:
-    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_network }}'] }}"
-  when: tag_network is defined
-  
-- set_fact:
-    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_region }}'] }}"
-  when: tag_region is defined
-  
-- set_fact:
-    standard_tag_set: "{{ standard_tag_set + ['tag:{{ tag_cloud }}'] }}"
-  when: tag_cloud is defined
 - debug:
     var: standard_tag_set
     verbosity: 2
 - debug:
     var: tailscale_tags
     verbosity: 2
-
 - set_fact:
     tailscale_tags_tag_set: "{{ tailscale_tags | list | map('regex_replace','^(tag:)?(.+)$','tag:\\2') }}"
 - debug:
